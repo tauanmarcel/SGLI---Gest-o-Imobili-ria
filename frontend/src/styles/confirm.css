@@ -1,0 +1,20 @@
+.react-confirm-alert-body {
+   color: #203443 !important;
+}
+
+.react-confirm-alert-button-group {
+   justify-content: flex-end !important;
+}
+
+.react-confirm-alert h1{
+   font-size: 20px;
+   margin-bottom: 10px;
+}
+
+.react-confirm-alert button:nth-child(1) {
+   background: #50b792 !important;
+}
+
+.react-confirm-alert button:nth-child(2) {
+   background: #d0182d !important;
+}
