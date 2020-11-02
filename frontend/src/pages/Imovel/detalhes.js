@@ -37,7 +37,6 @@ export default function Detalhes({match}) {
     
     return (
         <Container>
-            <h1>SGLI - Sistema de Gerenciamento de Locação Imobiliária</h1>
             <Menu/>
             <ContentMain>
                 <h2>Detalhes do Imóvel</h2>

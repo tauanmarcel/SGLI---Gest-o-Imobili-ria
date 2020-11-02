@@ -63,7 +63,6 @@ export default function Locador() {
 
     return (
         <Container>
-            <h1>SGLI - Sistema de Gerenciamento de Locação Imobiliária</h1>
             <Menu/>
             <ContentMain>
                 <h2>Busca de Locadores</h2>
@@ -84,7 +83,7 @@ export default function Locador() {
                         <FaUserPlus color="#FFF" size={14} />novo
                     </Link>
                 </form>
-                <h2>Informações dos Locadores</h2>
+                <h3>Informações dos Locadores</h3>
                 <table>
                     <thead>
                         <tr>

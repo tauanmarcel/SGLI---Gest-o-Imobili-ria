@@ -74,7 +74,6 @@ export default function SetLocatario({match}) {
 
     return (
         <Container>
-            <h1>SGLI - Sistema de Gerenciamento de Locação Imobiliária</h1>
             <Menu/>
             <ContentMain>
                 <h2>{subTitle + (nome != '' ? ` - ${nome}` : '')}</h2>

@@ -4,7 +4,7 @@ const ContentMain = styled.div.attrs(props => ({}))`
    width: ${(props => props.popup ? '100%' : '75%')};
    float: left;
 
-   h2 {
+   h2, h3 {
       margin: 5% auto 10px auto;
       width: 85%;
       box-sizing: border-box;

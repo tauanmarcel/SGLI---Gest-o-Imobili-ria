@@ -10,6 +10,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 export default function Menu() {    
    return (
       <ContentMenu>
+         <h1>SGLI - Sistema de Gerenciamento de Locação Imobiliária</h1>
          <nav>
             <ul>
                <li><Link to={`/locatario`}>LOCATÁRIO</Link></li>

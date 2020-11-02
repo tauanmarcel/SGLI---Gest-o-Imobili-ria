@@ -63,7 +63,6 @@ export default function Locatario() {
 
     return (
         <Container>
-            <h1>SGLI - Sistema de Gerenciamento de Locação Imobiliária</h1>
             <Menu/>
             <ContentMain>
                 <h2>Busca de Locatários</h2>
@@ -84,7 +83,7 @@ export default function Locatario() {
                         <FaUserPlus color="#FFF" size={14} />novo
                     </Link>
                 </form>
-                <h2>Informações de Locatários</h2>
+                <h3>Informações dos Locatários</h3>
                 <table>
                     <thead>
                         <tr>
