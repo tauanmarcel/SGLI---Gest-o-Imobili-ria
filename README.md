@@ -1,9 +1,4 @@
-<p align="center">
-    <img src="frontend/src/assets/logo.png"/>
-</p>
-
-
-# SGLI - SGLI - Sistema de Gerenciamento de Locação Imobiliária
+# SGLI - Sistema de Gerenciamento de Locação Imobiliária
 
 Proposta de sistema desenvolvido em:
     - Back-end: PHP Nativo
