@@ -14,7 +14,15 @@ class LocadorTable extends Connection{
 		$fone     = isset($data['fone'])        ? $data['fone']        : '';
 		$dtRepasse = isset($data['data_repasse']) ? $data['data_repasse'] : '';
 
-		$query = "SELECT id, nome, email, fone, data_repasse FROM locador WHERE 1 = 1";
+		$query = "
+			SELECT 
+				id,
+				nome,
+				email,
+				fone,
+				date_format(data_repasse,'%Y-%m-%d')  as data_repasse,
+				date_format(data_repasse,'%d/%m/%Y')  as parse_data_repasse 
+			FROM locador WHERE 1 = 1";
 
 		if(!empty($id)) {
 			$query .= " AND id = $id";
@@ -25,7 +33,7 @@ class LocadorTable extends Connection{
 		}
 
 		if(!empty($email)) {
-			$query .= " AND email = '$email'";
+			$query .= " AND email LIKE '%$email%'";
 		}
 
 		if(!empty($fone)) {
@@ -43,11 +51,12 @@ class LocadorTable extends Connection{
 		while($fetch = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			array_push($locadores, [
-				'id'           => $fetch['id'],
-				'nome'         => $fetch['nome'],
-				'email'        => $fetch['email'],
-				'fone'         => $fetch['fone'],
-				'data_repasse' => $fetch['data_repasse'],
+				'id'                 => $fetch['id'],
+				'nome'               => $fetch['nome'],
+				'email'              => $fetch['email'],
+				'fone'               => $fetch['fone'],
+				'data_repasse'       => $fetch['data_repasse'],
+				'parse_data_repasse' => $fetch['parse_data_repasse'],
 			]);
 		}
 

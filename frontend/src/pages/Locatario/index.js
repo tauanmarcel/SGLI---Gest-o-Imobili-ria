@@ -7,6 +7,7 @@ import api from '../../services/api';
 import Container from '../../components/Container';
 import Menu from '../../components/Menu';
 import ContentMain from '../../components/ContentMain';
+import { maskPhone } from '../../components/Functions';
 
 import { toast } from 'react-toastify';
 import { confirmAlert } from 'react-confirm-alert';
@@ -37,7 +38,7 @@ export default function Locatario() {
                 }
             } catch(err) {
                 console.log(err);
-                toast.error("Erro ao excluir novo locatário!");
+                toast.error("Erro ao excluir locatário!");
             }
         }
 
@@ -100,7 +101,7 @@ export default function Locatario() {
                                 <td>{locatario.id}</td>
                                 <td>{locatario.nome}</td>
                                 <td>{locatario.email}</td>
-                                <td>{locatario.fone}</td>
+                                <td>{maskPhone(locatario.fone)}</td>
                                 <td>
                                     <Link to={`locatario/editar/${locatario.id}`}><FaEdit /></Link>
                                     <button title="Excluir" onClick={() => handleRemove(locatario.id)}><FaTrashAlt /></button>

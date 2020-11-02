@@ -11,7 +11,8 @@ import { toast } from 'react-toastify';
 
 export default function SetLocatario({match}) {
 
-    const [id, setId] = useState(match.params.id);
+    const id = match.params.id || '';
+
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
     const [fone, setFone] = useState('');

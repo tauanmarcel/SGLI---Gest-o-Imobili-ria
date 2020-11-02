@@ -1,6 +1,7 @@
 <?php 
 header("Access-Control-Allow-Origin: *");
-header("Content-Type: aplication/json");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
 
 include "../../controller/ImovelController.php";
 

@@ -33,11 +33,11 @@ class ImovelTable extends Connection{
 		}
 
 		if(!empty($bairro)) {
-			$query .= " AND i.bairro = '$bairro'";
+			$query .= " AND i.bairro LIKE '%$bairro%'";
 		}
 
 		if(!empty($cidade)) {
-			$query .= " AND i.cidade = '$cidade'";
+			$query .= " AND i.cidade LIKE '%$cidade%'";
 		}
 
 		if(!empty($locadorId)) {
@@ -47,6 +47,8 @@ class ImovelTable extends Connection{
 		if(!empty($nmeLocador)) {
 			$query .= " AND l.nome LIKE '%$nmeLocador%'";
 		}
+
+		$query .= " ORDER BY id";
 
 		$stmt = $this->conn()->prepare($query);
 

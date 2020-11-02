@@ -88,16 +88,14 @@ class LocatarioController extends LocatarioTable {
 
 			return [
 				'status' => 200,
-				'mensagem' => 'Locatário cadastrado com sucesso!'
+				'message' => 'Locatário cadastrado com sucesso!'
 			];
 
 		} catch(Exception $e) {
 
-			header("HTTP/1.1 400 Bad Request");
-
 			return [
 				'status' => 400,
-				'mensagem' => $e->getMessage(),
+				'error' => $e->getMessage(),
 				'cod_error' => $e->getCode()
 			];
 		}
@@ -152,16 +150,14 @@ class LocatarioController extends LocatarioTable {
 
 			return [
 				'status' => 200,
-				'mensagem' => 'Locatário editado com sucesso!'
+				'message' => 'Locatário editado com sucesso!'
 			];
 
 		} catch(Exception $e) {
 
-			header("HTTP/1.1 400 Bad Request");
-
 			return [
 				'status' => 400,
-				'mensagem' => $e->getMessage(),
+				'error' => $e->getMessage(),
 				'cod_error' => $e->getCode()
 			];
 		}
@@ -200,16 +196,14 @@ class LocatarioController extends LocatarioTable {
 
 			return [
 				'status' => 200,
-				'mensagem' => 'Locatário excluído com sucesso!'
+				'message' => 'Locatário excluído com sucesso!'
 			];
 
 		} catch(Exception $e) {
 
-			header("HTTP/1.1 400 Bad Request");
-
 			return [
 				'status' => 400,
-				'mensagem' => $e->getMessage(),
+				'error' => $e->getMessage(),
 				'cod_error' => $e->getCode()
 			];
 		}

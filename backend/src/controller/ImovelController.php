@@ -84,16 +84,16 @@ class ImovelController extends ImovelTable {
 
 			return [
 				'status' => 200,
-				'mensagem' => 'Imóvel cadastrado com sucesso!'
+				'message' => 'Imóvel cadastrado com sucesso!'
 			];
 
 		} catch(Exception $e) {
 
-			header("HTTP/1.1 400 Bad Request");
+			// header("HTTP/1.1 400 Bad Request");
 
 			return [
 				'status' => 400,
-				'mensagem' => $e->getMessage(),
+				'error' => $e->getMessage(),
 				'cod_error' => $e->getCode()
 			];
 		}
@@ -149,16 +149,14 @@ class ImovelController extends ImovelTable {
 
 			return [
 				'status' => 200,
-				'mensagem' => 'Imóvel editado com sucesso!'
+				'message' => 'Imóvel editado com sucesso!'
 			];
 
 		} catch(Exception $e) {
 
-			header("HTTP/1.1 400 Bad Request");
-
 			return [
 				'status' => 400,
-				'mensagem' => $e->getMessage(),
+				'error' => $e->getMessage(),
 				'cod_error' => $e->getCode()
 			];
 		}
@@ -190,16 +188,14 @@ class ImovelController extends ImovelTable {
 
 			return [
 				'status' => 200,
-				'mensagem' => 'Imóvel excluído com sucesso!'
+				'message' => 'Imóvel excluído com sucesso!'
 			];
 
 		} catch(Exception $e) {
 
-			header("HTTP/1.1 400 Bad Request");
-
 			return [
 				'status' => 400,
-				'mensagem' => $e->getMessage(),
+				'error' => $e->getMessage(),
 				'cod_error' => $e->getCode()
 			];
 		}

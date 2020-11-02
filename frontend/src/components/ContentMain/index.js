@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-const ContentMain = styled.div`
-   width: 75%;
+const ContentMain = styled.div.attrs(props => ({}))`
+   width: ${(props => props.popup ? '100%' : '75%')};
    float: left;
 
    h2 {

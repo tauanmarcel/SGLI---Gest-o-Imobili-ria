@@ -24,7 +24,7 @@ class LocatarioTable extends Connection{
 		}
 
 		if(!empty($email)) {
-			$query .= " AND email = '$email'";
+			$query .= " AND email LIKE '%$email%'";
 		}
 
 		if(!empty($fone)) {
