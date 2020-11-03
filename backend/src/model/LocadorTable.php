@@ -12,7 +12,7 @@ class LocadorTable extends Connection{
 		$nome     = isset($data['nome'])        ? $data['nome']        : '';
 		$email    = isset($data['email'])       ? $data['email']       : '';
 		$fone     = isset($data['fone'])        ? $data['fone']        : '';
-		$dtRepasse = isset($data['data_repasse']) ? $data['data_repasse'] : '';
+		$diaRepasse = isset($data['dia_repasse']) ? $data['dia_repasse'] : '';
 
 		$query = "
 			SELECT 
@@ -20,8 +20,7 @@ class LocadorTable extends Connection{
 				nome,
 				email,
 				fone,
-				date_format(data_repasse,'%Y-%m-%d')  as data_repasse,
-				date_format(data_repasse,'%d/%m/%Y')  as parse_data_repasse 
+				dia_repasse
 			FROM locador WHERE 1 = 1";
 
 		if(!empty($id)) {
@@ -40,8 +39,8 @@ class LocadorTable extends Connection{
 			$query .= " AND fone = '$fone'";
 		}
 
-		if(!empty($dtRepasse)) {
-			$query .= " AND dt_repass BETWEEN '$dtRepasse' AND '$dtRepasse'";
+		if(!empty($diaRepasse)) {
+			$query .= " AND dt_repass BETWEEN '$diaRepasse' AND '$diaRepasse'";
 		}
 
 		$stmt = $this->conn()->prepare($query);
@@ -51,12 +50,11 @@ class LocadorTable extends Connection{
 		while($fetch = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			array_push($locadores, [
-				'id'                 => $fetch['id'],
-				'nome'               => $fetch['nome'],
-				'email'              => $fetch['email'],
-				'fone'               => $fetch['fone'],
-				'data_repasse'       => $fetch['data_repasse'],
-				'parse_data_repasse' => $fetch['parse_data_repasse'],
+				'id'          => $fetch['id'],
+				'nome'        => $fetch['nome'],
+				'email'       => $fetch['email'],
+				'fone'        => $fetch['fone'],
+				'dia_repasse' => $fetch['dia_repasse'],
 			]);
 		}
 
@@ -68,10 +66,10 @@ class LocadorTable extends Connection{
 		$nome      = $data['nome'];
 		$email     = $data['email'];
 		$fone      = $data['fone'];
-		$dtRepasse = $data['data_repasse'];
+		$diaRepasse = $data['dia_repasse'];
 
 		try {
-			$query = "INSERT INTO locador(nome, email, fone, data_repasse) VALUES('$nome', '$email', '$fone', '$dtRepasse')";
+			$query = "INSERT INTO locador(nome, email, fone, dia_repasse) VALUES('$nome', '$email', '$fone', '$diaRepasse')";
 
 			$stmt = $this->conn()->prepare($query);
 
@@ -94,11 +92,11 @@ class LocadorTable extends Connection{
 		$nome      = !empty($data['nome'])         ? "'" . $data['nome']         . "'" : "nome";
 		$email     = !empty($data['email'])        ? "'" . $data['email']        . "'" : "email";
 		$fone      = !empty($data['fone'])         ? "'" . $data['fone']         . "'" : "fone";
-		$dtRepasse = !empty($data['data_repasse']) ? "'" . $data['data_repasse'] . "'" : "data_repasse";
+		$diaRepasse = !empty($data['dia_repasse'])  ? "'" . $data['dia_repasse']  . "'" : "dia_repasse";
 		$date      = date('Y-m-d H:i:s');
 
 		try {
-			$query = "UPDATE  locador SET nome = $nome, email = $email, fone = $fone, data_repasse = $dtRepasse, updated_at = '$date' WHERE id = $id";
+			$query = "UPDATE  locador SET nome = $nome, email = $email, fone = $fone, dia_repasse = $diaRepasse, updated_at = '$date' WHERE id = $id";
 
 			$stmt = $this->conn()->prepare($query);
 

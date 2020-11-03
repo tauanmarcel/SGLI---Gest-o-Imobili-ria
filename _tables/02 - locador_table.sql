@@ -1,9 +1,0 @@
-CREATE TABLE locador (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(150) NOT NULL,
-    email VARCHAR(150) NOT NULL,
-    fone VARCHAR(20) NOT NULL,
-    data_repasse DATETIME NOT NULL,
-    created_at DATETIME NOT NULL DEFAULT NOW(),
-    updated_at DATETIME NOT NULL DEFAULT NOW()
-)

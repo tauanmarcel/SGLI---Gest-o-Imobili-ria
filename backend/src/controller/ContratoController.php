@@ -4,6 +4,7 @@ include_once "../../model/ContratoTable.php";
 include_once "../../model/ImovelTable.php";
 include_once "../../model/LocadorTable.php";
 include_once "../../model/LocatarioTable.php";
+include_once "../../controller/MensalidadeController.php";
 include_once "Validator.php";
 
 class ContratoController extends ContratoTable {
@@ -59,8 +60,11 @@ class ContratoController extends ContratoTable {
 		$locadorId     = isset($data['locador_id'])     ? $data['locador_id']     : '';
 		$locatarioId   = isset($data['locatario_id'])   ? $data['locatario_id']   : '';
 
+		$this->conn()->beginTransaction();
+
 		try {
 			
+
 			if(empty($dataInicio)) { throw new Exception("A data de início deve ser informada!"); }
 			if(empty($dataFim)) { throw new Exception("A data final deve ser informada!"); }
 			if(empty($taxaAdmin)) {	throw new Exception("A taxa administrativa deve ser informada!"); }
@@ -119,14 +123,26 @@ class ContratoController extends ContratoTable {
 				throw new Exception("Erro ao adicionar o contrato!", 1002);
 			}
 
+			$contrato = $this->find(['id' => '(SELECT MAX(id) FROM contrato)']);
+
+			$vlrMensalidade = $vlrAluguel + $vlrIptu + $vlrCondominio;
+
+			$mensalidade = (new MensalidadeController($this->conn()))->create($dataInicio, $dataFim, $vlrMensalidade, $contrato[0]['id']);
+
+			if($mensalidade['status'] != 200) {
+				throw new Exception($mensalidade['error']);
+			}
+
+			// $this->conn()->commit();
+
 			return [
 				'status' => 200,
-				'mensagem' => 'Contrato adicionado com sucesso!'
+				'mensagem' => 'Contrato gerado com sucesso!'
 			];
 
 		} catch(Exception $e) {
 
-			header("HTTP/1.1 400 Bad Request");
+			// $this->conn()->rollBack();
 
 			return [
 				'status' => 400,
@@ -214,9 +230,11 @@ class ContratoController extends ContratoTable {
 				throw new Exception("Erro ao editar contrato!", 1002);
 			}
 
+			$mensagem = !empty($data) ? 'Contrato atualizado com sucesso!' : "Nenhuma alteração realizada!";
+
 			return [
 				'status' => 200,
-				'mensagem' => 'Contrato editado com sucesso!'
+				'mensagem' => $mensagem
 			];
 
 		} catch(Exception $e) {

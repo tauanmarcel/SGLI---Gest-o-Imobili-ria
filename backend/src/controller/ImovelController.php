@@ -147,9 +147,11 @@ class ImovelController extends ImovelTable {
 				throw new Exception("Erro ao editar imóvel!", 1002);
 			}
 
+			$mensagem = !empty($data) ? 'Imóvel atualizado com sucesso!' : "Nenhuma alteração realizada!";
+
 			return [
 				'status' => 200,
-				'message' => 'Imóvel editado com sucesso!'
+				'message' => $mensagem
 			];
 
 		} catch(Exception $e) {

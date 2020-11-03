@@ -19,18 +19,18 @@ class LocadorController extends LocadorTable {
 
 		$data = $this->validator->clearData($data);
 
-		$id        = isset($data['id'])           ? $data['id']           : '';
-		$nome      = isset($data['nome'])         ? $data['nome']         : '';
-		$email     = isset($data['email'])        ? $data['email']        : '';
-		$fone      = isset($data['fone'])         ? $data['fone']         : '';
-		$dtRepasse = isset($data['data_repasse']) ? $data['data_repasse'] : '';
+		$id         = isset($data['id'])          ? $data['id']          : '';
+		$nome       = isset($data['nome'])        ? $data['nome']        : '';
+		$email      = isset($data['email'])       ? $data['email']       : '';
+		$fone       = isset($data['fone'])        ? $data['fone']        : '';
+		$diaRepasse = isset($data['dia_repasse']) ? $data['dia_repasse'] : '';
 
 		$data = [
 			'id'           => $id,
 			'nome'         => $nome,
 			'email'        => $email,
 			'fone'         => $fone,
-			'data_repasse' => $dtRepasse
+			'dia_repasse' => $diaRepasse
 		];
 
 		return $this->find($data);
@@ -40,10 +40,10 @@ class LocadorController extends LocadorTable {
 
 		$data = $this->validator->clearData($data);
 
-		$nome      = isset($data['nome'])         ? $data['nome']         : '';
-		$email     = isset($data['email'])        ? $data['email']        : '';
-		$fone      = isset($data['fone'])         ? $data['fone']         : '';
-		$dtRepasse = isset($data['data_repasse']) ? $data['data_repasse'] : '';
+		$nome       = isset($data['nome'])        ? $data['nome']        : '';
+		$email      = isset($data['email'])       ? $data['email']       : '';
+		$fone       = isset($data['fone'])        ? $data['fone']        : '';
+		$diaRepasse = isset($data['dia_repasse']) ? $data['dia_repasse'] : '';
 
 		try {
 			
@@ -62,9 +62,9 @@ class LocadorController extends LocadorTable {
 				throw new Exception("O telefone deve ser informado!");
 			}
 
-			if(empty($dtRepasse)) {
+			if(empty($diaRepasse)) {
 
-				throw new Exception("A data do repasse deve ser informada!");
+				throw new Exception("O dia do repasse deve ser informada!");
 			}
 
 			if(!$this->validator->validateEmail($email)) {
@@ -88,7 +88,7 @@ class LocadorController extends LocadorTable {
 				'nome'         => $nome,
 				'email'        => $email,
 				'fone'         => $fone,
-				'data_repasse' => $dtRepasse
+				'dia_repasse' => $diaRepasse
 			];
 
 			if(!$this->store($data)) {
@@ -117,11 +117,11 @@ class LocadorController extends LocadorTable {
 
 		$data = $this->validator->clearData($data);
 		
-		$id        = isset($data['id'])           ? $data['id']           : '';
-		$nome      = isset($data['nome'])         ? $data['nome']         : '';
-		$email     = isset($data['email'])        ? $data['email']        : '';
-		$fone      = isset($data['fone'])         ? $data['fone']         : '';
-		$dtRepasse = isset($data['data_repasse']) ? $data['data_repasse'] : '';
+		$id         = isset($data['id'])          ? $data['id']          : '';
+		$nome       = isset($data['nome'])        ? $data['nome']        : '';
+		$email      = isset($data['email'])       ? $data['email']       : '';
+		$fone       = isset($data['fone'])        ? $data['fone']        : '';
+		$diaRepasse = isset($data['dia_repasse']) ? $data['dia_repasse'] : '';
 
 		try {
 			if(empty($id)) {
@@ -151,7 +151,7 @@ class LocadorController extends LocadorTable {
 				'nome'         => $nome,
 				'email'        => $email,
 				'fone'         => $fone,
-				'data_repasse' => $dtRepasse
+				'dia_repasse'  => $diaRepasse
 			];
 
 			if(!empty($data) && !$this->update($data)) {
@@ -159,9 +159,11 @@ class LocadorController extends LocadorTable {
 				throw new Exception("Erro ao cadastrar locador!", 1002);
 			}
 
+			$mensagem = !empty($data) ? 'Locador atualizado com sucesso!' : "Nenhuma alteração realizada!";
+
 			return [
 				'status' => 200,
-				'message' => 'Locador editado com sucesso!'
+				'message' => $mensagem
 			];
 
 		} catch(Exception $e) {

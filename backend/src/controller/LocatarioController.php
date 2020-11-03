@@ -145,12 +145,14 @@ class LocatarioController extends LocatarioTable {
 
 			if(!empty($data) && !$this->update($data)) {
 
-				throw new Exception("Erro ao cadastrar locatário!", 1002);
+				throw new Exception("Erro ao atualizar locatário!", 1002);
 			}
+
+			$mensagem = !empty($data) ? 'Locatário atualizado com sucesso!' : "Nenhuma alteração realizada!";
 
 			return [
 				'status' => 200,
-				'message' => 'Locatário editado com sucesso!'
+				'message' => $mensagem
 			];
 
 		} catch(Exception $e) {

@@ -12,33 +12,29 @@ import { toast } from 'react-toastify';
 export default function SetLocador({match}) {
 
     const id = match.params.id || '';
-    const newDate = new Date();
-    const date = newDate.getFullYear() + '-' + ('00' + newDate.getMonth()).slice(-2) + '-' + ('00' + (newDate.getDay() + 1)).slice(-2);
-
-    console.log(date);
 
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
     const [fone, setFone] = useState('');
-    const [dtRepasse, setDtRepasse] = useState(date);
+    const [diaRepasse, setDiaRepasse] = useState(null);
     const [subTitle, setSubTitle] = useState('Cadastro de Novo Locador');
 
     function reserForm() {
         setNome('');
         setEmail('');
         setFone('');
-        setDtRepasse('');
+        setDiaRepasse('');
     }
 
     async function loadLocador(id){
         let response = await api.get(`/locador/index.php?id=${id}`);
 
-        let {nome, email, fone, data_repasse} = response.data[0];
+        let {nome, email, fone, dia_repasse} = response.data[0];
 
         setNome(nome);
         setEmail(email);
         setFone(fone);
-        setDtRepasse(data_repasse);
+        setDiaRepasse(dia_repasse);
 
     }
 
@@ -55,9 +51,9 @@ export default function SetLocador({match}) {
             let response = {};
 
             if(id) {
-                response = await api.put(`/locador/index.php?id=${id}`, {nome, email, fone, data_repasse: dtRepasse});
+                response = await api.put(`/locador/index.php?id=${id}`, {nome, email, fone, dia_repasse: diaRepasse});
             } else {
-                response = await api.post(`/locador/index.php`, {nome, email, fone, data_repasse: dtRepasse});
+                response = await api.post(`/locador/index.php`, {nome, email, fone, dia_repasse: diaRepasse});
             }
 
             const {status, message, error} = response.data;
@@ -100,8 +96,8 @@ export default function SetLocador({match}) {
                         <input type="tel" value={fone} onChange={e => setFone(e.target.value)} />
                     </div>
                     <div>
-                        <label>Data do Repasse</label>
-                        <input type="date" value={dtRepasse} onChange={e => setDtRepasse(e.target.value)} />
+                        <label>Dia do Repasse</label>
+                        <input type="text" value={diaRepasse} onChange={e => setDiaRepasse(e.target.value)} />
                     </div>
                     <div className="_100 right">
                         <button type="button" onClick={handleSubmit}>Salvar</button>

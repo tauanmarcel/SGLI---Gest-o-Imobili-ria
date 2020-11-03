@@ -91,7 +91,7 @@ export default function Locador() {
                             <th width="20%">NOME</th>
                             <th width="20%">E-MAIL</th>
                             <th width="30%">TELEFONE</th>
-                            <th width="5%">DATA DO REPASSE</th>
+                            <th width="5%">DIA DO REPASSE</th>
                             <th width="20%">AÇÃO</th>
                         </tr>
                     </thead>
@@ -102,7 +102,7 @@ export default function Locador() {
                                 <td>{locador.nome}</td>
                                 <td>{locador.email}</td>
                                 <td>{maskPhone(locador.fone)}</td>
-                                <td>{locador.parse_data_repasse}</td>
+                                <td>{locador.dia_repasse}</td>
                                 <td>
                                     <Link to={`locador/editar/${locador.id}`}><FaEdit /></Link>
                                     <button title="Excluir" onClick={() => handleRemove(locador.id)}><FaTrashAlt /></button>
