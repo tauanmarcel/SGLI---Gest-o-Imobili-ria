@@ -3,7 +3,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
 
-include "../../controller/MensalidadeController.php";
+include "../../controller/RepasseController.php";
 
 $method =  $_SERVER["REQUEST_METHOD"];
 
@@ -13,7 +13,7 @@ if($method === "GET") {
 
 	$data = $_GET;
 
-	$imoveis = (new MensalidadeController())->index($data);
+	$imoveis = (new RepasseController())->index($data);
 
 	echo json_encode($imoveis, JSON_UNESCAPED_SLASHES);
 }
@@ -27,7 +27,7 @@ if($method === "PUT") {
 	
 	$data = json_decode(file_get_contents('php://input'), true);
 
-	$response = (new MensalidadeController())->edit($id, $contratoId, $data);
+	$response = (new RepasseController())->edit($id, $contratoId, $data);
 
 	echo json_encode($response, JSON_UNESCAPED_SLASHES);
 }
@@ -38,9 +38,9 @@ if($method === "DELETE") {
 	$data = json_decode(file_get_contents('php://input'), true);
 
 	$id = isset($_GET['id']) ? $_GET['id'] : '';
-	$contratoId = isset($_GET['contrato_id']) ? $_GET['contrato_id'] : ''; 
+	$contratoId = isset($_GET['contrato_id']) ? $_GET['contrato_id'] : '';
 
-	$response = (new MensalidadeController())->remove($id, $contratoId);
+	$response = (new RepasseController())->remove($id, $contratoId);
 
 	echo json_encode($response, JSON_UNESCAPED_SLASHES);
 }

@@ -2,7 +2,7 @@
 
 Proposta de sistema desenvolvido em:
 <ul>
-    <li>PHP Nativo >= 5.6</li>
+    <li>PHP Nativo</li>
     <li>React JS </li>
 </ul>
 

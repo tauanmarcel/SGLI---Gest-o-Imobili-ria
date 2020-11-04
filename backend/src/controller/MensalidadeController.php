@@ -33,7 +33,12 @@ class MensalidadeController extends MensalidadeTable {
 		return $this->find($data);
 	}
 
-	public function create($startDate, $endDate, $vlrMensalidade, $contratoId) {
+	public function create($data) {
+
+		$startDate      = $data['start_date'];
+		$endDate        = $data['end_date'];
+		$vlrMensalidade = $data['vlr_mensalidade'];
+		$contratoId     = $data['contrato_id'];
 
 		try {
 
@@ -66,12 +71,14 @@ class MensalidadeController extends MensalidadeTable {
 				$vlrPrimeiraParcela = $vlrDiario * (30 - ($diaInicial > 30 ? 30 : $diaInicial));
 			}
 
-			$data['qtd_mensalidade']      = $qtdMensalidade;
-			$data['vlr_mensalidade']      = $vlrMensalidade;
-			$data['vlr_primeira_parcela'] = $vlrPrimeiraParcela;
-			$data['start_date']           = $startDate;
-			$data['end_date']             = $endDate;
-			$data['contrato_id']          = $contratoId;
+			$data = [
+				'qtd_mensalidade'      => $qtdMensalidade,
+				'vlr_mensalidade'      => $vlrMensalidade,
+				'vlr_primeira_parcela' => $vlrPrimeiraParcela,
+				'start_date'           => $startDate,
+				'end_date'             => $endDate,
+				'contrato_id'          => $contratoId
+			];
 
 			if(!$this->store($data)) {
 
@@ -164,14 +171,15 @@ class MensalidadeController extends MensalidadeTable {
 		}
 	}
 
-	public function remove($id) {
+	public function remove($id, $contratoId) {
 
-		$data = $this->validator->clearData(['id' => $id]);
+		$data = $this->validator->clearData(['id' => $id, 'contrato_id' => $contratoId]);
 
-		$id = $data['id'];
+		$id         = $data['id'];
+		$contratoId = $data['contrato_id'];
 
 		try {
-			if(empty($id)) {
+			if(empty($id) && empty($contratoId)) {
 
 				throw new Exception("Mensalidade não informada!");
 			}
@@ -183,21 +191,21 @@ class MensalidadeController extends MensalidadeTable {
 				throw new Exception("Mensalidade não encontrada!");
 			}
 
-			if(!$this->delete($id)) {
+			if(!$this->delete($id, $contratoId)) {
 
 				throw new Exception("Erro ao excluir mensalidade!", 1002);
 			}
 
 			return [
 				'status' => 200,
-				'mensagem' => 'Mensalidade excluída com sucesso!'
+				'message' => 'Mensalidade excluída com sucesso!'
 			];
 
 		} catch(Exception $e) {
 
 			return [
 				'status' => 400,
-				'mensagem' => $e->getMessage(),
+				'error' => $e->getMessage(),
 				'cod_error' => $e->getCode()
 			];
 		}

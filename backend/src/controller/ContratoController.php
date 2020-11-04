@@ -5,6 +5,7 @@ include_once "../../model/ImovelTable.php";
 include_once "../../model/LocadorTable.php";
 include_once "../../model/LocatarioTable.php";
 include_once "../../controller/MensalidadeController.php";
+include_once "../../controller/RepasseController.php";
 include_once "Validator.php";
 
 class ContratoController extends ContratoTable {
@@ -63,7 +64,6 @@ class ContratoController extends ContratoTable {
 		$this->conn()->beginTransaction();
 
 		try {
-			
 
 			if(empty($dataInicio)) { throw new Exception("A data de início deve ser informada!"); }
 			if(empty($dataFim)) { throw new Exception("A data final deve ser informada!"); }
@@ -120,20 +120,43 @@ class ContratoController extends ContratoTable {
 
 			if(!$this->store($data)) {
 
-				throw new Exception("Erro ao adicionar o contrato!", 1002);
+				throw new Exception("Erro ao gerar o contrato!", 1002);
 			}
 
 			$contrato = $this->find(['id' => '(SELECT MAX(id) FROM contrato)']);
 
 			$vlrMensalidade = $vlrAluguel + $vlrIptu + $vlrCondominio;
 
-			$mensalidade = (new MensalidadeController($this->conn()))->create($dataInicio, $dataFim, $vlrMensalidade, $contrato[0]['id']);
+			$vlrRepasse = $vlrAluguel + $vlrIptu;
 
+			/* Gera as mensalidades */
+			$dataMensalidade = [
+				'start_date'      => $dataInicio,
+				'end_date'        => $dataFim,
+				'vlr_mensalidade' => $vlrMensalidade,
+				'contrato_id'     => $contrato[0]['id']
+			];
+			
+			$mensalidade = (new MensalidadeController($this->conn()))->create($dataMensalidade);
+			
 			if($mensalidade['status'] != 200) {
 				throw new Exception($mensalidade['error']);
 			}
 
-			// $this->conn()->commit();
+			/* Gera os repasses */
+			$dataRepasse = [
+				'start_date'  => $dataInicio,
+				'end_date'    => $dataFim,
+				'vlr_repasse' => $vlrRepasse,
+				'contrato_id' => $contrato[0]['id'],
+				'locador_id'  => $locadorId,
+			];
+
+			$repasse = (new RepasseController($this->conn()))->create($dataRepasse);
+
+			if($repasse['status'] != 200) {
+				throw new Exception($repasse['error']);
+			}
 
 			return [
 				'status' => 200,
@@ -141,8 +164,6 @@ class ContratoController extends ContratoTable {
 			];
 
 		} catch(Exception $e) {
-
-			// $this->conn()->rollBack();
 
 			return [
 				'status' => 400,

@@ -6,7 +6,7 @@ class MensalidadeTable extends Connection{
 
 	public function find($data = []) {
 
-		$contratos = [];
+		$mensalidades = [];
 
 		$id             = isset($data['id'])              ? $data['id']              : '';
 		$dataVencimento = isset($data['data_vencimento']) ? $data['data_vencimento'] : '';
@@ -18,9 +18,12 @@ class MensalidadeTable extends Connection{
 			m.id,
 			m.nro_mensalidade,
             m.data_vencimento,
+            date_format(m.data_vencimento, '%d/%m/%Y') as parse_data_vencimento,
             m.status,
 			c.data_inicio,
+			date_format(c.data_inicio, '%d/%m/%Y') as parse_data_inicio,
 			c.data_fim,
+			date_format(c.data_fim, '%d/%m/%Y') as parse_data_fim,
 			m.vlr_mensalidade,
 		    c.locador_id,
 		    p.nome as nme_locador,
@@ -42,7 +45,7 @@ class MensalidadeTable extends Connection{
 		}
 
 		if(!empty($contratoId)) {
-			$query .= " AND m.contrato_id = $id";
+			$query .= " AND m.contrato_id = $contratoId";
 		}
 
 		if(!empty($dataVencimento)) {
@@ -59,23 +62,26 @@ class MensalidadeTable extends Connection{
 
 		while($fetch = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-			array_push($contratos, [
-				'id'              => $fetch['id'],
-				'nro_mensalidade' => $fetch['nro_mensalidade'],
-				'data_vencimento' => $fetch['data_vencimento'],
-				'status'          => $fetch['status'],
-				'data_inicio'     => $fetch['data_inicio'],
-				'data_fim'        => $fetch['data_fim'],
-				'vlr_mensalidade' => $fetch['vlr_mensalidade'],
-				'locador_id'      => $fetch['locador_id'],
-				'nme_locador'     => $fetch['nme_locador'],
-				'locatario_id'    => $fetch['locatario_id'],
-				'nme_locatario'   => $fetch['nme_locatario'],
-				'contrato_id'     => $fetch['contrato_id'],
+			array_push($mensalidades, [
+				'id'                    => $fetch['id'],
+				'nro_mensalidade'       => $fetch['nro_mensalidade'],
+				'data_vencimento'       => $fetch['data_vencimento'],
+				'parse_data_vencimento' => $fetch['parse_data_vencimento'],
+				'status'                => $fetch['status'],
+				'data_inicio'           => $fetch['data_inicio'],
+				'parse_data_inicio'     => $fetch['parse_data_inicio'],
+				'data_fim'              => $fetch['data_fim'],
+				'parse_data_fim'        => $fetch['parse_data_fim'],
+				'vlr_mensalidade'       => $fetch['vlr_mensalidade'],
+				'locador_id'            => $fetch['locador_id'],
+				'nme_locador'           => $fetch['nme_locador'],
+				'locatario_id'          => $fetch['locatario_id'],
+				'nme_locatario'         => $fetch['nme_locatario'],
+				'contrato_id'           => $fetch['contrato_id'],
 			]);
 		}
 
-		return $contratos;
+		return $mensalidades;
 	}
 
 	public function store($data) {
@@ -85,7 +91,6 @@ class MensalidadeTable extends Connection{
 		$vlrMensalidade     = $data['vlr_mensalidade'];
 		$vlrPrimeiraParcela = $data['vlr_primeira_parcela'];
 		$startDate          = $data['start_date'];
-		$startDate          = $data['end_date'];
 
 		try {
 
@@ -173,10 +178,16 @@ class MensalidadeTable extends Connection{
 		}
 	}
 
-	public function delete($id) {
+	public function delete($id, $contratoId) {
 
 		try {
-			$query = "DELETE FROM mensalidade WHERE id = $id";
+			$query = "DELETE FROM mensalidade WHERE 1 = 1";
+
+			if(!empty($contratoId)) {
+				$query .= " AND contrato_id = $contratoId";
+			}else{
+				$query .= " AND id = $id";
+			}
 
 			$stmt = $this->conn()->prepare($query);
 
