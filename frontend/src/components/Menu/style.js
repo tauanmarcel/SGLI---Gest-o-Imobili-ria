@@ -8,8 +8,12 @@ const ContentMenu = styled.div`
       max-width: 200px;
       float: left;
       margin-top: 5%;
+      box-sizing: border-box;
    
       ul {
+
+         position: fixed;
+         width: 15%;
    
          li {
             list-style: none;

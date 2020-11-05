@@ -5,8 +5,8 @@ import api from '../../services/api';
 import Container from '../../components/Container';
 import Menu from '../../components/Menu';
 import ContentMain from '../../components/ContentMain';
-import BuscaImovel from './buscaImovel';
-import BuscaLocador from './buscaLocador';
+import BuscaImovelVista from '../../components/Busca/buscaImovelVista';
+import BuscaLocador from '../../components/Busca/buscaLocador';
 import Unform from '../../components/Unform';
 import Popup from '../../components/Poppup';
 
@@ -150,7 +150,7 @@ export default function SetImovel({match}) {
                 </Unform>
             </ContentMain>
             <Popup 
-                contain={<BuscaImovel functionPreencher={preencherCampos}/>} 
+                contain={<BuscaImovelVista functionPreencher={preencherCampos}/>} 
                 displayNone={displayNonePopupImovel} 
                 close={() => setDisplayNonePopupImovel(true)}
             />

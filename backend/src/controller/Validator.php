@@ -12,7 +12,7 @@ class Validator {
 	    
 	    $phone = preg_replace('/[()]/', '', $phone);
 
-	    $regexPhone = "^[0-9]{11}$^";
+	    $regexPhone = "/^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$/";
 
 	    return preg_match($regexPhone, $phone);
 	}
@@ -22,7 +22,7 @@ class Validator {
 		$parseData = [];
 
 		foreach($data as $k => $d) {
-			$parseData[$k] = preg_replace("/(\-\-)|\<|\>|\/\|\\/|\"|script|truncate|from|select|insert|delete|where|drop|table|grant|[()]|\'/", "", $d);
+			$parseData[$k] = preg_replace("/(\-\-)|\_|\<|\>|\/\|\\/|\"|script|truncate|from|select|insert|delete|where|drop|table|grant|[()]|\'/", "", $d);
 
 			if($k == 'phone' || $k == 'fone' || $k == 'tel' || $k == 'telefone') {
 				$parseData[$k] = str_replace("-", "", str_replace(" ", "", $parseData[$k]));

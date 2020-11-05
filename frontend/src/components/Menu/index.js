@@ -13,9 +13,11 @@ export default function Menu() {
          <h1>SGLI - Sistema de Gerenciamento de Locação Imobiliária</h1>
          <nav>
             <ul>
+               <li><Link to={`/`}>INÍCIO</Link></li>
                <li><Link to={`/locatario`}>LOCATÁRIO</Link></li>
                <li><Link to={`/locador`}>LOCADOR</Link></li>
                <li><Link to={`/imovel`}>IMÓVEL</Link></li>
+               <li><Link to={`/locacao`}>LOCAÇÃO</Link></li>
             </ul>
             <ToastContainer/>
          </nav>

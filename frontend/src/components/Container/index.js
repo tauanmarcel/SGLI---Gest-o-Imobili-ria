@@ -11,6 +11,14 @@ const Container = styled.div`
         width: 100%;
         text-align: center;
     }
+
+    .red {
+        color: #d62626;
+    }
+
+    .green {
+        color: #0c5a0c;
+    }
 `;
 
 export default Container;

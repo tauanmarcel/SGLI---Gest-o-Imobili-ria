@@ -12,6 +12,8 @@ class MensalidadeTable extends Connection{
 		$dataVencimento = isset($data['data_vencimento']) ? $data['data_vencimento'] : '';
 		$status         = isset($data['status'])          ? $data['status']          : '';
 		$contratoId     = isset($data['contrato_id'])     ? $data['contrato_id']     : '';
+		$ateDias        = isset($data['ate_dias'])        ? $data['ate_dias'] : '';
+
 
 		$query = "
 		SELECT 
@@ -29,7 +31,8 @@ class MensalidadeTable extends Connection{
 		    p.nome as nme_locador,
 		    c.locatario_id,
 		    l.nome as nme_locatario,
-		    m.contrato_id
+		    m.contrato_id,
+		    concat(i.bairro, ',', i.cidade) as imovel
 		FROM mensalidade m
 		INNER JOIN contrato c
 			ON c.id = m.contrato_id
@@ -37,6 +40,8 @@ class MensalidadeTable extends Connection{
 			ON p.id = c.locador_id
 		INNER JOIN locatario l
 			ON l.id = c.locatario_id
+		INNER JOIN imovel i
+			ON i.id = c.imovel_id
 		WHERE 1 = 1";
 
 
@@ -50,6 +55,10 @@ class MensalidadeTable extends Connection{
 
 		if(!empty($dataVencimento)) {
 			$query .= " AND m.data_vencimento BETWEEN '$dataVencimento' AND '$dataVencimento'";
+		}
+
+		if(!empty($ateDias)) {
+			$query .= " AND m.data_vencimento BETWEEN '". date('Y-m-d') ."' AND '". date('Y-m-d', strtotime("+$ateDias days")) ."'";
 		}
 
 		if(!empty($status)) {
@@ -78,6 +87,7 @@ class MensalidadeTable extends Connection{
 				'locatario_id'          => $fetch['locatario_id'],
 				'nme_locatario'         => $fetch['nme_locatario'],
 				'contrato_id'           => $fetch['contrato_id'],
+				'imovel'             => $fetch['imovel'],
 			]);
 		}
 

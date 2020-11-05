@@ -102,7 +102,7 @@ export default function Locador() {
                                 <td>{locador.nome}</td>
                                 <td>{locador.email}</td>
                                 <td>{maskPhone(locador.fone)}</td>
-                                <td>{locador.dia_repasse}</td>
+                                <td>{('00' + locador.dia_repasse).slice(-2)}</td>
                                 <td>
                                     <Link to={`locador/editar/${locador.id}`}><FaEdit /></Link>
                                     <button title="Excluir" onClick={() => handleRemove(locador.id)}><FaTrashAlt /></button>

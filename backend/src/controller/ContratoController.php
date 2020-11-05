@@ -4,6 +4,8 @@ include_once "../../model/ContratoTable.php";
 include_once "../../model/ImovelTable.php";
 include_once "../../model/LocadorTable.php";
 include_once "../../model/LocatarioTable.php";
+include_once "../../model/MensalidadeTable.php";
+include_once "../../model/RepasseTable.php";
 include_once "../../controller/MensalidadeController.php";
 include_once "../../controller/RepasseController.php";
 include_once "Validator.php";
@@ -85,6 +87,11 @@ class ContratoController extends ContratoTable {
 				throw new Exception("A data final é inválida");
 			}
 
+			if(strtotime($dataInicio) > strtotime($dataFim)) {
+				
+				throw new Exception("A data final não pode ser maior que a inicial");
+			}
+
 			$response = (new ImovelTable())->find(['id' => $imovelId]);
 				
 			if(count($response) === 0) {
@@ -137,7 +144,7 @@ class ContratoController extends ContratoTable {
 				'contrato_id'     => $contrato[0]['id']
 			];
 			
-			$mensalidade = (new MensalidadeController($this->conn()))->create($dataMensalidade);
+			$mensalidade = (new MensalidadeController())->create($dataMensalidade);
 			
 			if($mensalidade['status'] != 200) {
 				throw new Exception($mensalidade['error']);
@@ -152,7 +159,7 @@ class ContratoController extends ContratoTable {
 				'locador_id'  => $locadorId,
 			];
 
-			$repasse = (new RepasseController($this->conn()))->create($dataRepasse);
+			$repasse = (new RepasseController())->create($dataRepasse);
 
 			if($repasse['status'] != 200) {
 				throw new Exception($repasse['error']);
@@ -160,14 +167,14 @@ class ContratoController extends ContratoTable {
 
 			return [
 				'status' => 200,
-				'mensagem' => 'Contrato gerado com sucesso!'
+				'message' => 'Contrato gerado com sucesso!'
 			];
 
 		} catch(Exception $e) {
 
 			return [
 				'status' => 400,
-				'mensagem' => $e->getMessage(),
+				'error' => $e->getMessage(),
 				'cod_error' => $e->getCode()
 			];
 		}
@@ -251,20 +258,16 @@ class ContratoController extends ContratoTable {
 				throw new Exception("Erro ao editar contrato!", 1002);
 			}
 
-			$mensagem = !empty($data) ? 'Contrato atualizado com sucesso!' : "Nenhuma alteração realizada!";
-
 			return [
 				'status' => 200,
-				'mensagem' => $mensagem
+				'message' => 'Contrato atualizado com sucesso!'
 			];
 
 		} catch(Exception $e) {
 
-			header("HTTP/1.1 400 Bad Request");
-
 			return [
 				'status' => 400,
-				'mensagem' => $e->getMessage(),
+				'error' => $e->getMessage(),
 				'cod_error' => $e->getCode()
 			];
 		}
@@ -289,6 +292,14 @@ class ContratoController extends ContratoTable {
 				throw new Exception("Contrato não encontrado!");
 			}
 
+			if(!(new MensalidadeTable())->delete(0, $id)) {
+				throw new Exception("Erro ao excluir mensalidades");
+			}
+
+			if(!(new RepasseTable())->delete(0, $id)) {
+				throw new Exception("Erro ao excluir repasses");
+			}
+
 			if(!$this->delete($id)) {
 
 				throw new Exception("Erro ao excluir contrato!", 1002);
@@ -296,16 +307,14 @@ class ContratoController extends ContratoTable {
 
 			return [
 				'status' => 200,
-				'mensagem' => 'Contrato excluído com sucesso!'
+				'message' => 'Contrato excluído com sucesso!'
 			];
 
 		} catch(Exception $e) {
 
-			header("HTTP/1.1 400 Bad Request");
-
 			return [
 				'status' => 400,
-				'mensagem' => $e->getMessage(),
+				'error' => $e->getMessage(),
 				'cod_error' => $e->getCode()
 			];
 		}

@@ -22,12 +22,14 @@ class MensalidadeController extends MensalidadeTable {
 		$dataVencimento = isset($data['data_vencimento']) ? $data['data_vencimento'] : '';
 		$status         = isset($data['status'])          ? $data['status']          : '';
 		$contratoId     = isset($data['contrato_id'])     ? $data['contrato_id']     : '';
+		$ateDias        = isset($data['ate_dias'])        ? $data['ate_dias'] : '';
 
 		$data = [
 			'id'              => $id,
 			'data_vencimento' => $dataVencimento,
 			'status'          => $status,
 			'contrato_id'     => $contratoId,
+			'ate_dias'        => $ateDias,
 		];
 
 		return $this->find($data);
@@ -42,39 +44,12 @@ class MensalidadeController extends MensalidadeTable {
 
 		try {
 
-			$objStartDate = new DateTime($startDate);
-			$objEndDate   = new DateTime($endDate);
-
-			$vlrPrimeiraParcela = $vlrMensalidade;
-
-			$diff = $objStartDate->diff($objEndDate);
-
-			$qtdYear  = $diff->y;
-			$qtdMonth = $diff->m;
-			$qtdDays  = $diff->d;
-
-			$qtdMensalidade = $qtdMonth;
-
-			$qtdMensalidade += $qtdYear > 0 ? ($qtdYear * 12) : 0;
-			$qtdMensalidade += $qtdDays > 0 ? 1 : 0;
-
-			$diaInicial = date('d', strtotime($startDate));
-
-			/* Estou considerando todos os meses como 30 dias para obter o valor diário da mensalidade*/
-			
-			if($diaInicial >= 28 && date('m', strtotime($startDate)) == 2) {
-				$diaInicial = 30;
-			}
-
-			if($diaInicial != 1) {
-				$vlrDiario = $vlrMensalidade / 30;
-				$vlrPrimeiraParcela = $vlrDiario * (30 - ($diaInicial > 30 ? 30 : $diaInicial));
-			}
+			$parcelas = $this->gerarParcelas($startDate, $endDate, $vlrMensalidade);
 
 			$data = [
-				'qtd_mensalidade'      => $qtdMensalidade,
+				'qtd_mensalidade'      => $parcelas['qtd_mensalidade'],
 				'vlr_mensalidade'      => $vlrMensalidade,
-				'vlr_primeira_parcela' => $vlrPrimeiraParcela,
+				'vlr_primeira_parcela' => $parcelas['vlr_primeira_parcela'],
 				'start_date'           => $startDate,
 				'end_date'             => $endDate,
 				'contrato_id'          => $contratoId
@@ -209,5 +184,42 @@ class MensalidadeController extends MensalidadeTable {
 				'cod_error' => $e->getCode()
 			];
 		}
+	}
+
+	private function gerarParcelas($startDate, $endDate, $vlrMensalidade) {
+
+		$objStartDate = new DateTime($startDate);
+		$objEndDate   = new DateTime($endDate);
+
+		$vlrPrimeiraParcela = $vlrMensalidade;
+
+		$diff = $objStartDate->diff($objEndDate);
+
+		$qtdYear  = $diff->y;
+		$qtdMonth = $diff->m;
+		$qtdDays  = $diff->d;
+
+		$qtdMensalidade = $qtdMonth;
+
+		$qtdMensalidade += $qtdYear > 0 ? ($qtdYear * 12) : 0;
+		$qtdMensalidade += $qtdDays > 0 ? 1 : 0;
+
+		$diaInicial = date('d', strtotime($startDate));
+
+		/* Estou considerando todos os meses como 30 dias para obter o valor diário da mensalidade*/
+		
+		if($diaInicial >= 28 && date('m', strtotime($startDate)) == 2) {
+			$diaInicial = 30;
+		}
+
+		if($diaInicial != 1) {
+			$vlrDiario = $vlrMensalidade / 30;
+			$vlrPrimeiraParcela = $vlrDiario * (30 - ($diaInicial > 30 ? 30 : $diaInicial));
+		}
+
+		return [
+			'qtd_mensalidade' => $qtdMensalidade,
+			'vlr_primeira_parcela' => $vlrPrimeiraParcela
+		];
 	}
 }

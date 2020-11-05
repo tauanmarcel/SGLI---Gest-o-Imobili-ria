@@ -12,6 +12,7 @@ class RepasseTable extends Connection{
 		$dataRepasse = isset($data['data_repasse']) ? $data['data_repasse'] : '';
 		$status      = isset($data['status'])       ? $data['status']       : '';
 		$contratoId  = isset($data['contrato_id'])  ? $data['contrato_id']  : '';
+		$ateDias     = isset($data['ate_dias'])     ? $data['ate_dias'] : '';
 
 		$query = "
 		SELECT 
@@ -29,7 +30,8 @@ class RepasseTable extends Connection{
 		    p.nome as nme_locador,
 		    c.locatario_id,
 		    l.nome as nme_locatario,
-		    r.contrato_id
+		    r.contrato_id,
+		    concat(i.bairro, ',', i.cidade) as imovel
 		FROM repasse r
 		INNER JOIN contrato c
 			ON c.id = r.contrato_id
@@ -37,6 +39,8 @@ class RepasseTable extends Connection{
 			ON p.id = c.locador_id
 		INNER JOIN locatario l
 			ON l.id = c.locatario_id
+		INNER JOIN imovel i
+			ON i.id = c.imovel_id
 		WHERE 1 = 1";
 
 		if(!empty($id)) {
@@ -49,6 +53,10 @@ class RepasseTable extends Connection{
 
 		if(!empty($dataRepasse)) {
 			$query .= " AND r.data_repasse BETWEEN '$dataRepasse' AND '$dataRepasse'";
+		}
+
+		if(!empty($ateDias)) {
+			$query .= " AND r.data_repasse BETWEEN '". date('Y-m-d') ."' AND '". date('Y-m-d', strtotime("+$ateDias days")) ."'";
 		}
 
 		if(!empty($status)) {
@@ -77,6 +85,7 @@ class RepasseTable extends Connection{
 				'locatario_id'       => $fetch['locatario_id'],
 				'nme_locatario'      => $fetch['nme_locatario'],
 				'contrato_id'        => $fetch['contrato_id'],
+				'imovel'             => $fetch['imovel'],
 			]);
 		}
 

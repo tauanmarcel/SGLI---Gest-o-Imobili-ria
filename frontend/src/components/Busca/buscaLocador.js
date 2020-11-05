@@ -9,13 +9,13 @@ import Unform from '../../components/Unform';
 import { maskPhone } from '../../components/Functions';
 
 export default function BuscaLocador({functionPreencher}) {
-    const [locadores, setLocadore] = useState([]);
+    const [locadores, setLocadores] = useState([]);
 
     async function loadLocadores(name='', email='') {
 
         const response = await api.get(`/locador/index.php?nome=${name}&email=${email}`);
 
-        setLocadore(response.data);
+        setLocadores(response.data);
     }
 
     return (
@@ -48,7 +48,7 @@ export default function BuscaLocador({functionPreencher}) {
                                 <th>NOME</th>
                                 <th>E-MAIL</th>
                                 <th>TELEFONE</th>
-                                <th>DATA DO REPASSE</th>
+                                <th>DIA REPASSE</th>
                                 <th>SELECIONAR</th>
                             </tr>
                         </thead>
@@ -60,7 +60,7 @@ export default function BuscaLocador({functionPreencher}) {
                                         <td>{locador.nome}</td>
                                         <td>{locador.email}</td>
                                         <td>{maskPhone(locador.fone)}</td>
-                                        <td>{locador.parse_data_repasse}</td>
+                                        <td>{('00'+locador.dia_repasse).slice(-2)}</td>
                                         <td><button onClick={() => functionPreencher(locador.id, locador.nome)}><FaCheck /></button></td>
                                     </tr>
                                 )) 

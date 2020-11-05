@@ -22,7 +22,9 @@ class ContratoTable extends Connection{
 		SELECT 
 			c.id,
 			c.data_inicio,
+			date_format(c.data_inicio, '%d/%m/%Y') as parse_data_inicio,
 			c.data_fim,
+			date_format(c.data_fim, '%d/%m/%Y') as parse_data_fim,
 			c.taxa_admin,
 			c.vlr_aluguel,
 			c.vlr_condominio,
@@ -55,7 +57,7 @@ class ContratoTable extends Connection{
 		}
 
 		if(!empty($bairro)) {
-			$query .= " AND i.bairro = '$bairro'";
+			$query .= " AND i.bairro LIKE '%$bairro%'";
 		}
 
 		if(!empty($cidade)) {
@@ -67,7 +69,7 @@ class ContratoTable extends Connection{
 		}
 
 		if(!empty($nmeLocador)) {
-			$query .= " AND p.name LIKE '%$nmeLocador%'";
+			$query .= " AND p.nome LIKE '%$nmeLocador%'";
 		}
 
 		if(!empty($locatarioId)) {
@@ -75,7 +77,7 @@ class ContratoTable extends Connection{
 		}
 
 		if(!empty($nmeLocatario)) {
-			$query .= " AND l.name LIKE '%$nmeLocatario%'";
+			$query .= " AND l.nome LIKE '%$nmeLocatario%'";
 		}
 
 		$stmt = $this->conn()->prepare($query);
@@ -85,19 +87,21 @@ class ContratoTable extends Connection{
 		while($fetch = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			array_push($contratos, [
-				'id'             => $fetch['id'],
-				'data_inicio'    => $fetch['data_inicio'],
-				'data_fim'       => $fetch['data_fim'],
-				'taxa_admin'     => $fetch['taxa_admin'],
-				'vlr_aluguel'    => $fetch['vlr_aluguel'],
-				'vlr_condominio' => $fetch['vlr_condominio'],
-				'vlr_iptu'       => $fetch['vlr_iptu'],
-				'codigo_api'     => $fetch['codigo_api'],
-				'imovel'         => $fetch['imovel'],
-				'locador_id'     => $fetch['locador_id'],
-				'nme_locador'    => $fetch['nme_locador'],
-				'locatario_id'   => $fetch['locatario_id'],
-				'nme_locatario'  => $fetch['nme_locatario'],
+				'id'                => $fetch['id'],
+				'data_inicio'       => $fetch['data_inicio'],
+				'parse_data_inicio' => $fetch['parse_data_inicio'],
+				'data_fim'          => $fetch['data_fim'],
+				'parse_data_fim'    => $fetch['parse_data_fim'],
+				'taxa_admin'        => $fetch['taxa_admin'],
+				'vlr_aluguel'       => $fetch['vlr_aluguel'],
+				'vlr_condominio'    => $fetch['vlr_condominio'],
+				'vlr_iptu'          => $fetch['vlr_iptu'],
+				'codigo_api'        => $fetch['codigo_api'],
+				'imovel'            => $fetch['imovel'],
+				'locador_id'        => $fetch['locador_id'],
+				'nme_locador'       => $fetch['nme_locador'],
+				'locatario_id'      => $fetch['locatario_id'],
+				'nme_locatario'     => $fetch['nme_locatario'],
 			]);
 		}
 

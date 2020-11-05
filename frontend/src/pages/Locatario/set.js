@@ -7,6 +7,8 @@ import Menu from '../../components/Menu';
 import ContentMain from '../../components/ContentMain';
 import Unform from '../../components/Unform';
 
+import InputMask from 'react-input-mask';
+
 import { toast } from 'react-toastify';
 
 export default function SetLocatario({match}) {
@@ -88,7 +90,7 @@ export default function SetLocatario({match}) {
                     </div>
                     <div>
                         <label>Telefone</label>
-                        <input type="tel" value={fone} onChange={e => setFone(e.target.value)} />
+                        <InputMask mask="(99) 99999 9999" value={fone} onChange={e => setFone(e.target.value)} />
                     </div>
                     <div className="_100 right">
                         <button type="button" onClick={handleSubmit}>Salvar</button>

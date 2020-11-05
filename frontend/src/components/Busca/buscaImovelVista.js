@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { FaCheck } from 'react-icons/fa';
+import { FaCheck, FaAngleDoubleLeft, FaPlus } from 'react-icons/fa';
+import styled from 'styled-components';
 
 import apiVista from '../../services/api_vista';
 
@@ -9,11 +10,18 @@ import Container from '../../components/Container';
 import ContentMain from '../../components/ContentMain';
 import Unform from '../../components/Unform';
 
-export default function BuscaImovel({functionPreencher}) {
+export default function BuscaImovelVista({functionPreencher}) {
 
     const [imoveis, setImoveis] = useState([]);
+    const [imovel, setImovel] = useState([]);
     const [searchBairro, setSearchBairro] = useState('');
     const [searchCidade, setSearchCidade] = useState('');
+    const [displayMain, setDisplayMain] = useState(true);
+    const [displayDetail, setDisplayDetail] = useState(false);
+
+    const Toogle = styled.div.attrs(props => ({}))`
+        display: ${(props) => props.display ? 'block' : 'none'};
+    `;
 
     async function buscarImovelVista() {
         
@@ -46,6 +54,37 @@ export default function BuscaImovel({functionPreencher}) {
         setImoveis(Object.entries(response.data));
     }
 
+    async function loadImovelVista(id){
+
+        console.log(id)
+
+        const params = {
+            "fields": [
+                "Codigo",
+                "Categoria",
+                "Bairro",
+                "Cidade",
+                "ValorLocacao",
+                "Dormitorios",
+                "Suites"
+            ]
+        }
+
+        const pesquisa = JSON.stringify(params);
+
+        var response = await apiVista.get(`/imoveis/detalhes?key=c9fdd79584fb8d369a6a579af1a8f681&imovel=${id}&pesquisa=${pesquisa}`);
+        
+        setImovel(response.data);
+    }
+
+    function handleToogle(id) {
+        if(!displayDetail){
+            loadImovelVista(id);
+        }
+        setDisplayMain(!displayMain);
+        setDisplayDetail(!displayDetail);
+    }
+
     return (
         <Container>
             <ContentMain popup>
@@ -64,6 +103,7 @@ export default function BuscaImovel({functionPreencher}) {
                         <button type="button" onClick={buscarImovelVista}>Buscar</button>
                     </div>
                 </Unform>
+                <Toogle display={displayMain}>
                 { imoveis.length == 0 || 
                     <table>
                         <thead>
@@ -91,7 +131,7 @@ export default function BuscaImovel({functionPreencher}) {
                                         <td>{imovel[0]}</td>
                                         <td>{imovel[1].Bairro != "" ? imovel[1].Bairro : "Não Informado"}</td>
                                         <td>{imovel[1].Cidade}</td>
-                                        <td><Link to={`detalhes/${imovel[0]}`}>Ver detalhes</Link></td>
+                                        <td><button onClick={() => handleToogle(imovel[0])}><FaPlus /></button></td>
                                         <td><button onClick={() => functionPreencher(imovel[1].Codigo, imovel[1].Bairro, imovel[1].Cidade)}><FaCheck /></button></td>
                                     </tr>
                                 ))
@@ -99,6 +139,37 @@ export default function BuscaImovel({functionPreencher}) {
                         </tbody>
                     </table>
                 }
+                </Toogle>
+                <Toogle display={displayDetail}>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Categoria</th>
+                                <th>Bairro</th>
+                                <th>Cidade</th>
+                                <th>V. Locação</th>
+                                <th>Dormitórios</th>
+                                <th>Suites</th>
+                                <th>Voltar</th>
+                                <th>Selecionar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{imovel.Codigo}</td>
+                                <td>{imovel.Categoria}</td>
+                                <td>{imovel.Bairro}</td>
+                                <td>{imovel.Cidade}</td>
+                                <td>{imovel.ValorLocacao != '' ? imovel.ValorLocacao : 'Não Informado'}</td>
+                                <td>{imovel.Dormitorios != '' ? imovel.Dormitorios : 'Não Informado'}</td>
+                                <td>{imovel.Suites != '' ? imovel.Suites : 'Não Informado'}</td>
+                                <td><button onClick={handleToogle}><FaAngleDoubleLeft /></button></td>
+                                <td><button onClick={() => functionPreencher(imovel.Codigo, imovel.Bairro, imovel.Cidade)}><FaCheck /></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </Toogle>
             </ContentMain>
         </Container>
     );

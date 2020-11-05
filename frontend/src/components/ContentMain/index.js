@@ -1,8 +1,15 @@
 import styled from 'styled-components';
 
 const ContentMain = styled.div.attrs(props => ({}))`
-   width: ${(props => props.popup ? '100%' : '75%')};
+   width: ${(props => props.popup ? '100%' : '85%')};
    float: left;
+   box-sizing: border-box;
+
+   .go_back {
+      position: absolute;
+      right: 9%;
+      top: 20%;
+   }
 
    h2, h3 {
       margin: 5% auto 10px auto;
@@ -12,7 +19,7 @@ const ContentMain = styled.div.attrs(props => ({}))`
 
    form {
       width: 85%;
-      margin: 0 auto 75px;;
+      margin: 0 auto 75px;
 
       input {
          height: 30px;
@@ -57,6 +64,10 @@ const ContentMain = styled.div.attrs(props => ({}))`
          tr {
             th {
                padding: 10px 0;
+            }
+            
+            .th_acao {
+               min-width: 110px;
             }
          }
       }

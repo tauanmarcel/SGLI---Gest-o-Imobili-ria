@@ -23,12 +23,14 @@ class RepasseController extends RepasseTable {
 		$dataRepasse = isset($data['data_repasse']) ? $data['data_repasse'] : '';
 		$status      = isset($data['status'])       ? $data['status']       : '';
 		$contratoId  = isset($data['contrato_id'])  ? $data['contrato_id']  : '';
+		$ateDias        = isset($data['ate_dias'])        ? $data['ate_dias'] : '';
 
 		$data = [
 			'id'           => $id,
 			'data_repasse' => $dataRepasse,
 			'status'       => $status,
 			'contrato_id'  => $contratoId,
+			'ate_dias'        => $ateDias,
 		];
 
 		return $this->find($data);
@@ -44,34 +46,7 @@ class RepasseController extends RepasseTable {
 
 		try {
 
-			$objStartDate = new DateTime($startDate);
-			$objEndDate   = new DateTime($endDate);
-
-			$vlrPrimeiroRepasse = $vlrRepasse;
-
-			$diff = $objStartDate->diff($objEndDate);
-
-			$qtdYear  = $diff->y;
-			$qtdMonth = $diff->m;
-			$qtdDays  = $diff->d;
-
-			$qtdRepasse = $qtdMonth;
-
-			$qtdRepasse += $qtdYear > 0 ? ($qtdYear * 12) : 0;
-			$qtdRepasse += $qtdDays > 0 ? 1 : 0;
-
-			$diaInicial = date('d', strtotime($startDate));
-
-			/* Estou considerando todos os meses como 30 dias para obter o valor diário da mensalidade*/
-			
-			if($diaInicial >= 28 && date('m', strtotime($startDate)) == 2) {
-				$diaInicial = 30;
-			}
-
-			if($diaInicial != 1) {
-				$vlrDiario = $vlrRepasse / 30;
-				$vlrPrimeiroRepasse = $vlrDiario * (30 - ($diaInicial > 30 ? 30 : $diaInicial));
-			}
+			$parcelas = $this->gerarParcelas($startDate, $endDate, $vlrRepasse);
 
 			$locador = (new LocadorTable())->find(['id' => $locadorId]);
 			$diaRepasse = $locador[0]['dia_repasse'];
@@ -80,9 +55,9 @@ class RepasseController extends RepasseTable {
 				'start_date'     => $startDate,
 				'end_date'       => $endDate,
 				'dia_repasse'    => $diaRepasse,
-				'qtd_repasse'    => $qtdRepasse,
+				'qtd_repasse'    => $parcelas['qtd_repasse'],
 				'vlr_repasse'    => $vlrRepasse,
-				'vlr_repasse_um' => $vlrPrimeiroRepasse,
+				'vlr_repasse_um' => $parcelas['vlr_repasse_um'],
 				'contrato_id'    => $contratoId,
 			];
 
@@ -185,6 +160,7 @@ class RepasseController extends RepasseTable {
 		$contratoId = $data['contrato_id'];
 
 		try {
+
 			if(empty($id) && empty($contratoId)) {
 
 				throw new Exception("Repasse não informado!");
@@ -215,5 +191,42 @@ class RepasseController extends RepasseTable {
 				'cod_error' => $e->getCode()
 			];
 		}
+	}
+
+	private function gerarParcelas($startDate, $endDate, $vlrRepasse) {
+
+		$objStartDate = new DateTime($startDate);
+		$objEndDate   = new DateTime($endDate);
+
+		$vlrPrimeiroRepasse = $vlrRepasse;
+
+		$diff = $objStartDate->diff($objEndDate);
+
+		$qtdYear  = $diff->y;
+		$qtdMonth = $diff->m;
+		$qtdDays  = $diff->d;
+
+		$qtdRepasse = $qtdMonth;
+
+		$qtdRepasse += $qtdYear > 0 ? ($qtdYear * 12) : 0;
+		$qtdRepasse += $qtdDays > 0 ? 1 : 0;
+
+		$diaInicial = date('d', strtotime($startDate));
+
+		/* Estou considerando todos os meses como 30 dias para obter o valor diário da mensalidade*/
+		
+		if($diaInicial >= 28 && date('m', strtotime($startDate)) == 2) {
+			$diaInicial = 30;
+		}
+
+		if($diaInicial != 1) {
+			$vlrDiario = $vlrRepasse / 30;
+			$vlrPrimeiroRepasse = $vlrDiario * (30 - ($diaInicial > 30 ? 30 : $diaInicial));
+		}
+
+		return [
+			'qtd_repasse' => $qtdRepasse,
+			'vlr_repasse_um' => $vlrPrimeiroRepasse
+		];
 	}
 }

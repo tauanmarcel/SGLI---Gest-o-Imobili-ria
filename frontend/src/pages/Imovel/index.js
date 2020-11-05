@@ -7,7 +7,6 @@ import api from '../../services/api';
 import Container from '../../components/Container';
 import Menu from '../../components/Menu';
 import ContentMain from '../../components/ContentMain';
-import { maskPhone } from '../../components/Functions';
 
 import { toast } from 'react-toastify';
 import { confirmAlert } from 'react-confirm-alert';
