@@ -59,6 +59,7 @@ class MensalidadeTable extends Connection{
 
 		if(!empty($ateDias)) {
 			$query .= " AND m.data_vencimento BETWEEN '". date('Y-m-d') ."' AND '". date('Y-m-d', strtotime("+$ateDias days")) ."'";
+			$query .= " AND m.status = 'NÃO PAGA'";
 		}
 
 		if(!empty($status)) {

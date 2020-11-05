@@ -57,6 +57,7 @@ class RepasseTable extends Connection{
 
 		if(!empty($ateDias)) {
 			$query .= " AND r.data_repasse BETWEEN '". date('Y-m-d') ."' AND '". date('Y-m-d', strtotime("+$ateDias days")) ."'";
+			$query .= " AND r.status = 'NÃO REALIZADO'";
 		}
 
 		if(!empty($status)) {
