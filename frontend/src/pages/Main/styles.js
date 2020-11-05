@@ -30,12 +30,21 @@ export const PageMain = styled.div`
          height: 35px;
       }
 
-      p.main_box_content {
+      .main_box_content {
          font-size: 2em;
          text-align: center;
          margin-top: 10px;
          font-weight: bold;
       }
+   }
+
+   .ate_dias {
+      width: 30px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1em;
+      border: none;
+      border-bottom: solid 1px #aaa;
    }
 
 `;

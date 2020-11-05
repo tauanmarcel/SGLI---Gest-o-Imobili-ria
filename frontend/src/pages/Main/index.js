@@ -11,26 +11,26 @@ export default function Main() {
 
    const [mensalidades, setMensalidades] = useState([]); 
    const [repasses, setRepasses] = useState([]); 
-   const ateDias = 7;
+   const [ateDia, setAteDia] = useState(7);
 
    async function loadMensalidades() {
 
-      const response = await api.get(`/mensalidade/index.php?ate_dias=${ateDias}`);
+      const response = await api.get(`/mensalidade/index.php?ate_dias=${ateDia}`);
 
       setMensalidades(response.data);
    }
 
    async function loadRepasses() {
 
-      const response = await api.get(`/repasse/index.php?ate_dias=${ateDias}`);
+      const response = await api.get(`/repasse/index.php?ate_dias=${ateDia}`);
 
-      setMensalidades(response.data);
+      setRepasses(response.data);
    }
 
    useEffect(() => {
       loadMensalidades();
       loadRepasses();
-   }, [])
+   }, [ateDia])
 
    return (
       <Container>
@@ -39,11 +39,11 @@ export default function Main() {
             <h2>Resumo</h2>
             <PageMain>
                <div>
-                  <p className="main_box_title">MENSALIDADES A VENCER - {ateDias} DIAS</p>
+                  <p className="main_box_title">Mensalidades a vencer nos próximos <input type="text" className="ate_dias" value={ateDia} onChange={e => setAteDia(e.target.value)}/> dias</p>
                   <p className="main_box_content">{mensalidades.length}</p>
                </div>
                <div>
-                  <p className="main_box_title">REPASSES A VENCER - {ateDias} DIAS</p>
+                  <p className="main_box_title">Repasses a vencer nos próximos <input type="text" className="ate_dias" value={ateDia} onChange={e => setAteDia(e.target.value)}/> dias</p>
                   <p className="main_box_content">{repasses.length}</p>
                </div>
             </PageMain>
